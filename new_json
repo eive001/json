@@ -2,9 +2,9 @@
    "binary" : [
       {
          "checksum" : {
-            "md5" : "",
-            "sha1" : "",
-            "sha256" : ""
+            "md5" : " ",
+            "sha1" : " ",
+            "sha256" : " "
          },
          "url" : "./src/agent/target/x86_64-unknown-linux-musl/release/kata-agent"
       }
@@ -28,7 +28,7 @@
    ],
    "environment" : {
       "architecture" : "x86-64",
-      "kernelVersion" : "5.0"
+      "kernel_version" : "5.0"
    },
    "name" : "kata-agent",
    "source" : {

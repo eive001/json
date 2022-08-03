@@ -1,11 +1,11 @@
-read: jsonCppUsage.cpp
-	g++ jsonCppUsage.cpp libjsoncpp.a -I include -o read
+json: jsonCppUsage.cpp
+	g++ jsonCppUsage.cpp libjsoncpp.a -I include -o json
 
 run:
-	./read
+	./json
 
 clean:
-	rm read
+	rm json
 
 
 # ///
