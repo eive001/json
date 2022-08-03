@@ -1,0 +1,42 @@
+{
+   "config": {
+     "version": "0.1",  // version of GuanFu
+   },
+   "name": "kata-agent",
+   "version": "1.0",
+   "source": {
+     "sourceType": "git",
+     "sourceLink": "https://github.com/kata-containers/kata-containers.git"
+   }
+   "environment": {
+     "architecture": "x86-64",
+     "kernelVersion": "5.0"
+   }
+   "dependency": [
+     {
+        "source": "make",
+        "version": "0.0"
+     },
+     // "git": {},
+     // "gcc": {}
+   ],
+   "command": [
+     "mkdir kata-agent",
+     "cd kata-agent",
+     "apt-get source kata-agent",
+     "apt-get -y build-dep kata-agent",
+     "dpkg-source -x *.dsc build",
+     "cd ../",
+   ]
+   "binary": [
+     {
+       "uri": "./src/agent/target/x86_64-unknown-linux-musl/release/kata-agent",
+       "checksum": {
+         "md5": "",
+         "sha1": "",
+         "sha256": "81de8efd8475c7413c5cf16066b6e023bcea6c3cd52c2984ff36b3dd69b855ff"
+       }
+     }
+   ],
+   "timestamp": "1234567890",  // time of build
+ }
