@@ -72,8 +72,10 @@ using std::vector;
 
         }
 
+    }
+    read_file.close();
 
-        //install depdence
+    //install depdence
         map<string, string>::iterator it = map_dependency.begin();
 
         system("apt-get update");
@@ -84,25 +86,20 @@ using std::vector;
             system(order.c_str());
             it++;
         }
+    
 
-        //excude command
-
+    //excude command
+        ofstream write_bash("command.sh");
+        write_bash<<"#!/bin/bash"<<endl;
         for(vector<string>::iterator it = vec_command.begin();it!=vec_command.end();it++)
         {
-            cout<<"========excute  "<<*it <<endl;
-            system((*it).c_str());
+            write_bash<<*it<<endl;
         }
-        
 
+        system("bash /home/code/command.sh");
 
-
-    }
-
-
-
-
-
-    return true;
+        write_bash.close();
+        return true;
  }
 
  bool write_json_file()
