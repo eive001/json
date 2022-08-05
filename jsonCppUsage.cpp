@@ -73,21 +73,35 @@ using std::vector;
         }
 
 
+        //install depdence
+        map<string, string>::iterator it = map_dependency.begin();
+
+        system("apt-get update");
+        while(it!= map_dependency.end())
+        {
+            cout<<it->first<<"   ====   version is ==== "<<it->second<<endl;
+            string order = "apt-get install -y " + it->first+"="+it->second;
+            system(order.c_str());
+            it++;
+        }
+
+        //excude command
+
+        for(vector<string>::iterator it = vec_command.begin();it!=vec_command.end();it++)
+        {
+            cout<<"========excute  "<<*it <<endl;
+            system((*it).c_str());
+        }
+        
+
+
 
     }
 
 
 
-    // string message = "{ \"data\" : { \"username\" : \"test\" }, \"type\" : 6 }";
-    // Json::Reader reader(Json::Features::strictMode());
-    // Json::Value parseData;
-    // if (reader.parse(message.c_str(), parseData))
-    // {
-    //     int type = parseData.get("type", 0).asInt();
-    //     Json::Value frameData = parseData.get("data", 0);
-    //     string username = frameData.get("username", 0).asString();
-    //     printf("type: %d, username: %s\n", type, username.c_str());
-    // }
+
+
     return true;
  }
 
@@ -163,7 +177,7 @@ int main()
     read_json_file();
  
     // 生成json串
-    write_json_file();
+   // write_json_file();
  
     return 0;
 }

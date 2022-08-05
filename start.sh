@@ -1,6 +1,7 @@
-#!/bin/bash
-echo ""
+echo "  "
 echo "welcome to new container!"
-echo ""
+echo " "
+
 cd /home/code
+
 /bin/bash
