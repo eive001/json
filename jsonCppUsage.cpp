@@ -12,12 +12,48 @@
  using std::ifstream;
  using std::ofstream;
  using std::string;
-
+ using std::stringstream;
 using std::cout;
 using std::cerr;
 
 using std::map;
 using std::vector;
+
+
+int execute_command(char *cmd, char *result)
+{
+    int iRet = -1;
+    const int buf_size = 100;
+    char buf_ps[buf_size];
+    char ps[buf_size] = {0};
+    FILE *ptr;
+
+    strcpy(ps, cmd);
+
+    if((ptr = popen(ps, "r")) != NULL)
+    {
+        while(fgets(buf_ps, sizeof(buf_ps), ptr) != NULL)
+        {
+           strcat(result, buf_ps);
+           if(strlen(result) > buf_size)
+           {
+               break;
+           }
+        }
+        pclose(ptr);
+        ptr = NULL;
+        iRet = 0;  // 处理成功
+    }
+    else
+    {
+        printf("popen %s error\n", ps);
+        iRet = -1; // 处理失败
+    }
+
+    return iRet;
+}
+
+
  bool read_json_file()
  {
 
@@ -97,8 +133,31 @@ using std::vector;
         }
 
         system("bash /home/code/command.sh");
-
         write_bash.close();
+        system("rm /home/code/command.sh");
+        
+
+        //read 3 line 
+        ifstream read_checksum("checksum.txt");
+        string line, address;
+        vector<string> checksum_result(3);
+        size_t i = 0;
+        while (getline(read_checksum, line))
+        {
+            /* code */
+            stringstream ss;
+            ss<<line;
+            ss>>checksum_result[i++]>>address;
+            ss.clear();
+        }
+        
+        map_property["shasum"]=checksum_result[0];
+        map_property["sha256sum"] = checksum_result[1];
+        map_property["md5sum"] = checksum_result[2];
+        
+
+        cout<<"shasum is  "<<map_property["shasum"]<<endl;
+
         return true;
  }
 

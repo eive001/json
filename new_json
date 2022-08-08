@@ -12,8 +12,13 @@
    "command" : [
       "mkdir code",
       "cd code",
-      "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path",
-      //"bash source \"$HOME/.cargo/env\"",
+      "export SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt",
+      "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y  --no-modify-path",
+      "echo  [source.tuna] >> /root/.cargo/config",
+      "echo  registry = \\\" https://mirrors.tuna.tsinghua.edu.cn/git/crates.io-index.git\\\" >> /root/.cargo/config",
+      "source \"$HOME/.cargo/env\"",
+      "rustup install 1.53.0 && rustup target add x86_64-unknown-linux-musl",
+      "cargo --version",
       "git clone https://github.com/kata-containers/kata-containers.git",
       "cd  kata-containers/src/agent",
       "make"
@@ -22,6 +27,7 @@
       "version_gf" : "0.1"
    },
    "dependency" : [
+      // search version in apt : apt-cache madison package-name
       {
          "source_dep" : "make",
          "version_dep" : "4.3-4.1build1"
@@ -39,6 +45,14 @@
       {
          "source_dep" : "curl",
          "version_dep" : "7.81.0-1ubuntu1.3"
+      },
+      {
+         "source_dep" : "libseccomp-dev",
+         "version_dep" : "2.5.3-2ubuntu2"
+      },
+      {
+         "source_dep" : "gcc",
+         "version_dep" : "4:11.2.0-1ubuntu1"
       }
    ],
    "environment" : {
