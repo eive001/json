@@ -1,5 +1,7 @@
 json: jsonCppUsage.cpp
 	g++ jsonCppUsage.cpp libjsoncpp.a -I include -o json
+	rm share/json
+	cp json share/json
 
 run:
 	./json

@@ -20,39 +20,6 @@ using std::map;
 using std::vector;
 
 
-int execute_command(char *cmd, char *result)
-{
-    int iRet = -1;
-    const int buf_size = 100;
-    char buf_ps[buf_size];
-    char ps[buf_size] = {0};
-    FILE *ptr;
-
-    strcpy(ps, cmd);
-
-    if((ptr = popen(ps, "r")) != NULL)
-    {
-        while(fgets(buf_ps, sizeof(buf_ps), ptr) != NULL)
-        {
-           strcat(result, buf_ps);
-           if(strlen(result) > buf_size)
-           {
-               break;
-           }
-        }
-        pclose(ptr);
-        ptr = NULL;
-        iRet = 0;  // 处理成功
-    }
-    else
-    {
-        printf("popen %s error\n", ps);
-        iRet = -1; // 处理失败
-    }
-
-    return iRet;
-}
-
 
  bool read_json_file()
  {
@@ -132,13 +99,20 @@ int execute_command(char *cmd, char *result)
             write_bash<<*it<<endl;
         }
 
-        system("bash /home/code/command.sh");
+        system("bash command.sh");
         write_bash.close();
-        system("rm /home/code/command.sh");
+        system("rm command.sh");
         
-
+        system("cat checksum.txt");
         //read 3 line 
         ifstream read_checksum("checksum.txt");
+
+        if(!read_checksum.is_open())
+        {
+            cerr<<"failure to open check faile file!"<<endl;
+            return false;
+        }
+
         string line, address;
         vector<string> checksum_result(3);
         size_t i = 0;
@@ -157,7 +131,10 @@ int execute_command(char *cmd, char *result)
         
 
         cout<<"shasum is  "<<map_property["shasum"]<<endl;
+        
 
+        system("cd .. && rm code");
+ 
         return true;
  }
 
