@@ -14,16 +14,14 @@
       "cd code",
       "export SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt",
       "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y  --no-modify-path",
-      "echo  [source.tuna] >> /root/.cargo/config",
-      "echo  registry = \\\" https://mirrors.tuna.tsinghua.edu.cn/git/crates.io-index.git\\\" >> /root/.cargo/config",
       "source \"$HOME/.cargo/env\"",
       "rustup install 1.53.0 && rustup target add x86_64-unknown-linux-musl",
       "git clone https://github.com/kata-containers/kata-containers.git",
       "cd  kata-containers/src/agent",
-      "make",
-      "shasum /home/code/code/kata-containers/src/agent/target/x86_64-unknown-linux-musl/release/kata-agent >>checksum.txt",
-      "sha256sum /home/code/code/kata-containers/src/agent/target/x86_64-unknown-linux-musl/release/kata-agent >>checksum.txt",
-      "md5sum /home/code/code/kata-containers/src/agent/target/x86_64-unknown-linux-musl/release/kata-agent >>checksum.txt"
+      "./dettrace --base-env host -- make",
+      "shasum /home/code/kata-containers/src/agent/target/x86_64-unknown-linux-musl/release/kata-agent >>checksum.txt",
+      "sha256sum /home/code/kata-containers/src/agent/target/x86_64-unknown-linux-musl/release/kata-agent >>checksum.txt",
+      "md5sum /home/code/kata-containers/src/agent/target/x86_64-unknown-linux-musl/release/kata-agent >>checksum.txt"
    ],
    "config" : {
       "version_gf" : "0.1"

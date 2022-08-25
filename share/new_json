@@ -2,34 +2,26 @@
    "binary" : [
       {
          "checksum" : {
-            "md5" : " ",
-            "sha1" : " ",
-            "sha256" : " "
+            "md5" : "81bd97ba485129a1dc7b0b41f7a2ad51",
+            "sha1" : "afa71e29587bdec4dc251d4d307780f9692566a7",
+            "sha256" : "396af30e903492ab5c0e511ddf69d07eac85a611c1157e93f9de05459b59dfc9"
          },
-         "url" : "./src/agent/target/x86_64-unknown-linux-musl/release/kata-agent"
+         "url" : "/kata-containers/src/agent/target/x86_64-unknown-linux-musl/release/kata-agent"
       }
    ],
    "command" : [
-      "cd .. && mkdir code",
+      "cd /home",
+      "mkdir code",
       "cd code",
-      "RUSTFLAGS='--cfg procmacro2_semver_exempt'",
+      "export SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt",
       "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y  --no-modify-path",
-      "echo  [source.tuna] >> /root/.cargo/config",
-      "echo  registry = \\\" https://mirrors.tuna.tsinghua.edu.cn/git/crates.io-index.git\\\" >> /root/.cargo/config",
       "source \"$HOME/.cargo/env\"",
-      "export PATH=/root/.cargo/bin:$PATH ",
       "rustup install 1.53.0 && rustup target add x86_64-unknown-linux-musl",
-      "git clone https://github.com/kata-containers/kata-containers.git",
+      "git clone https://github.com/eive001/kata-containers.git",
       "cd  kata-containers/src/agent",
-      "echo ==================ready to make=======================================",
-      "dettrace make",
-      "cd /home/rebuild",
-      "echo make finish ========== ",
-      "pwd",
-      "shasum /home/code/kata-containers/src/agent/target/x86_64-unknown-linux-musl/release/kata-agent >> checksum.txt",
-           ///home/code/kata-containers/src/agent/target/x86_64-unknown-linux-musl/release
-      "sha256sum /home/code/kata-containers/src/agent/target/x86_64-unknown-linux-musl/release/kata-agent >> checksum.txt",
-      "md5sum /home/code/kata-containers/src/agent/target/x86_64-unknown-linux-musl/release/kata-agent >> checksum.txt"
+      "make fetch",
+      "dettrace --base-env host -- make build_offline"
+   
    ],
    "config" : {
       "version_gf" : "0.1"
@@ -38,7 +30,7 @@
       // search version in apt : apt-cache madison package-name
       {
          "source_dep" : "make",
-         "version_dep" : "4.1-9.1ubuntu1"
+         "version_dep" : "4.1-9.1ubuntu1 "
       },
       {
          "source_dep" : "git",
@@ -50,6 +42,10 @@
          "version_dep" : "7.58.0-2ubuntu3.19"
 
       },
+      // {
+      //    "source_dep" : "curl",
+      //    "version_dep" : "7.81.0-1ubuntu1.3"
+      // },
       {
          "source_dep" : "libseccomp-dev",
          "version_dep" : "2.5.1-1ubuntu1~18.04.2"

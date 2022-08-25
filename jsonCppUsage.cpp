@@ -5,7 +5,7 @@
 #include <fstream> 
 #include <map>
 #include <vector>
-
+#include<string>
 //using namespace std;
  using std::string;
  using std::endl;
@@ -19,15 +19,16 @@ using std::cerr;
 using std::map;
 using std::vector;
 
-
-
- bool read_json_file()
- {
-
     map<string, string> map_property;
     vector<string> vec_command;
     vector<vector <string> > vec_binary;
     map<string, string >map_dependency;
+# define checksum_number 3
+
+ bool read_json_file()
+ {
+
+    
     ifstream read_file("new_json");
     
     if(!read_file.is_open())
@@ -75,9 +76,11 @@ using std::vector;
 
         }
 
+
     }
     read_file.close();
 
+        string target_url = "/home/code" + vec_binary[0][0]; 
     //install depdence
         map<string, string>::iterator it = map_dependency.begin();
 
@@ -94,18 +97,20 @@ using std::vector;
     //excude command
         ofstream write_bash("command.sh");
         write_bash<<"#!/bin/bash"<<endl;
+        write_bash<<"set -x"<<endl;
         for(vector<string>::iterator it = vec_command.begin();it!=vec_command.end();it++)
         {
             write_bash<<*it<<endl;
         }
-
-        system("bash command.sh");
-        write_bash.close();
-        system("rm command.sh");
+        write_bash<<"md5sum "<<target_url<<" >> /home/code/checksum"<<endl;
+        write_bash<<"shasum "<<target_url<<" >> /home/code/checksum"<<endl;
+        write_bash<<"sha256sum "<<target_url<<" >> /home/code/checksum"<<endl;
         
-        system("cat checksum.txt");
-        //read 3 line 
-        ifstream read_checksum("checksum.txt");
+        
+        write_bash.close();
+        system("bash command.sh");
+        
+        ifstream read_checksum("/home/code/checksum.txt");
 
         if(!read_checksum.is_open())
         {
@@ -114,7 +119,7 @@ using std::vector;
         }
 
         string line, address;
-        vector<string> checksum_result(3);
+        vector<string> checksum_result(checksum_number);
         size_t i = 0;
         while (getline(read_checksum, line))
         {
@@ -124,16 +129,23 @@ using std::vector;
             ss>>checksum_result[i++]>>address;
             ss.clear();
         }
-        
-        map_property["shasum"]=checksum_result[0];
-        map_property["sha256sum"] = checksum_result[1];
-        map_property["md5sum"] = checksum_result[2];
+        map_property["md5sum"] = checksum_result[0];
+        map_property["shasum"]=checksum_result[1];
+        map_property["sha256sum"] = checksum_result[2];
+    
         
 
         cout<<"shasum is  "<<map_property["shasum"]<<endl;
         
+        if(map_property["md5sum"] == vec_binary[0][1])
+        {
+            cout<<"Congratulations, the checksums are identical. This is a duplicate build."<<endl;
+        }else 
+        {
+            cout<<"Sorry for the checksum inconsistency , this is not a repeatable build"<<endl;
+        }
 
-        system("cd .. && rm code");
+        system("rm -rf  /home/code");
  
         return true;
  }
