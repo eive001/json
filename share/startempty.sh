@@ -1,9 +1,8 @@
 echo "  "
-echo "welcome to new container!"
+echo "welcome to Guanfu, this project will help you rebproduce a package !"
 echo " "
 
 cd /home/rebuild
 
-echo "hello "
 ./json
 /bin/bash

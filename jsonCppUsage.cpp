@@ -162,6 +162,8 @@ using std::vector;
         
 
         cout<<"shasum is  "<<map_property["shasum"]<<endl;
+        cout<<"sha256sum is  "<<map_property["sha256sum"]<<endl;
+        cout<<"md5sum is  "<<map_property["md5sum"]<<endl;
         
         if(map_property["md5sum"] == vec_binary[0][1])
         {
@@ -172,7 +174,7 @@ using std::vector;
         }
 
         system("rm -rf  /home/code");
- 
+        system("mv " +  target_url + " /home/rebuild/mount/" + map_property["name"]);
         return true;
  }
 
