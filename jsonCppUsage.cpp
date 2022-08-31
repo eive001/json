@@ -82,22 +82,48 @@ using std::vector;
 
         string target_url = "/home/code" + vec_binary[0][0]; 
     //install depdence
+
+        ofstream write_bash("command.sh");
+        write_bash<<"#!/bin/bash"<<endl;
+        write_bash<<"set -x"<<endl;
+        write_bash<<"cd /home && mkdir code && cd code"<<endl;
+        write_bash<<"export SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt"<<endl;
         map<string, string>::iterator it = map_dependency.begin();
 
         system("apt-get update");
         while(it!= map_dependency.end())
         {
+
+          if(it->first == "rust")
+          {
+             string order = "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y  --no-modify-path";
+             write_bash<<order<<endl;
+             order = "source \"$HOME/.cargo/env\"";
+             write_bash<<order<<endl;
+             order = "rustup target add x86_64-unknown-linux-musl";
+             write_bash<<order<<endl;
+             order = "rustup install "+ it->second;
+             write_bash<<order<<endl;
+             order = "rustup default "+ it->second;
+             write_bash<<order<<endl;
+          }else if (it->first == "_goetc")
+          {
+                //TODO expand other can't install by apt-get
+          }else 
+          {
             cout<<it->first<<"   ====   version is ==== "<<it->second<<endl;
             string order = "apt-get install -y " + it->first+"="+it->second;
             system(order.c_str());
-            it++;
+            
+          }
+
+           it++;
+            
         }
     
 
     //excude command
-        ofstream write_bash("command.sh");
-        write_bash<<"#!/bin/bash"<<endl;
-        write_bash<<"set -x"<<endl;
+
         for(vector<string>::iterator it = vec_command.begin();it!=vec_command.end();it++)
         {
             write_bash<<*it<<endl;
@@ -110,7 +136,7 @@ using std::vector;
         write_bash.close();
         system("bash command.sh");
         
-        ifstream read_checksum("/home/code/checksum.txt");
+        ifstream read_checksum("/home/code/checksum");
 
         if(!read_checksum.is_open())
         {
